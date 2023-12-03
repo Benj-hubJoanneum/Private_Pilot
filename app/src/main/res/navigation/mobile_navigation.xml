@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_gridview">
+
+    <fragment
+        android:id="@+id/nav_listview"
+        android:name="at.privatepilot.ui.listView.list.ListFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_listview" />
+
+    <fragment
+        android:id="@+id/nav_gridview"
+        android:name="at.privatepilot.ui.listView.grid.GridFragment"
+        android:label="@string/menu_gridview"
+        tools:layout="@layout/fragment_listview" />
+
+</navigation>
