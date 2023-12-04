@@ -3,6 +3,7 @@ package at.privatepilot
 import android.app.Activity
 import android.app.SearchManager
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.ActionMode
 import android.view.LayoutInflater
@@ -20,6 +21,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.res.ResourcesCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -28,7 +30,10 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import at.privatepilot.databinding.ActivityMainBinding
+import at.privatepilot.restapi.client.CredentialManager
 import at.privatepilot.restapi.service.NodeRepository
+import at.privatepilot.ui.listView.base.BaseFragment
+import at.privatepilot.ui.login.LoginActivity
 import at.privatepilot.ui.navView.NavAdapter
 import at.privatepilot.ui.navView.NavViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -42,6 +47,7 @@ class MainActivity : AppCompatActivity(), NodeRepository.ConnectionCallback, Nod
     private lateinit var binding: ActivityMainBinding
     private var actionMode: ActionMode? = null
     private val nodeRepository = NodeRepository.getInstance()
+    private val currentDestination: NavDestination? = null
 
     private val openFileLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -108,6 +114,8 @@ class MainActivity : AppCompatActivity(), NodeRepository.ConnectionCallback, Nod
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        val currentDestination = navController.currentDestination
+
         val navViewModel = ViewModelProvider(this)[NavViewModel::class.java]
         val navAdapter = NavAdapter()
         drawerRecyclerView.adapter = navAdapter
@@ -130,10 +138,22 @@ class MainActivity : AppCompatActivity(), NodeRepository.ConnectionCallback, Nod
             supportActionBar?.title = title
         }
 
+        if (!CredentialManager.deviceauth) {
+            redirectToLogin()
+            return
+        }
+
         nodeRepository.readNode("")
 
         handleIntent(intent)
+        handleSendIntent(intent)
     }
+
+    private fun redirectToLogin() {
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+    }
+
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -146,6 +166,31 @@ class MainActivity : AppCompatActivity(), NodeRepository.ConnectionCallback, Nod
             intent.getStringExtra(SearchManager.QUERY)?.also { query ->
                 onSearchQuery(query)
             }
+        }
+    }
+
+    private fun handleSendIntent(intent: Intent) {
+        if (Intent.ACTION_SEND == intent.action) {
+            val type = intent.type
+            if (type != null) {
+                when {
+                    type.startsWith("text/") -> handleSharedText(intent)
+                    else -> handleSharedFile(intent) // Handle any other file type
+                }
+            }
+        }
+    }
+
+    private fun handleSharedText(intent: Intent) {
+        val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
+        // safekeeping for later
+        showToast("Received shared text: $sharedText")
+    }
+
+    private fun handleSharedFile(intent: Intent) {
+        val fileUri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+        if (fileUri != null) {
+            nodeRepository.createNode(fileUri, this)
         }
     }
 

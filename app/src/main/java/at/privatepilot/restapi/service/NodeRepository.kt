@@ -17,6 +17,7 @@ import at.privatepilot.restapi.controller.ControllerSocket
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.http.Url
 import java.io.File
 import java.io.FileOutputStream
 
@@ -95,6 +96,15 @@ class NodeRepository() : ControllerSocket.ControllerCallback {
         CoroutineScope(Dispatchers.IO).launch {
             val path = _directoryPointer.value ?: ""
             controllerNode.createNodes("$path/$folder")
+        }
+    }
+
+    fun createNode(file: Uri, context: Context) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val path = _directoryPointer.value ?: ""
+            val data = getThisFile(file, context)
+
+            controllerNode.createNodes(path, data)
         }
     }
 

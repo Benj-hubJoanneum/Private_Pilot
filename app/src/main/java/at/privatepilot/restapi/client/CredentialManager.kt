@@ -6,6 +6,7 @@ object CredentialManager {
 
     var name = ""
     var token = ""
+    var deviceauth = false
 
     private const val PREFERENCES_NAME = "UserCredentials"
     private const val KEY_USERNAME = "username"

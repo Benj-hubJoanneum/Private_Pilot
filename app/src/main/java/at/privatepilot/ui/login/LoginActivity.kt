@@ -27,6 +27,7 @@ class LoginActivity : AppCompatActivity() {
 
             if (enteredUsername == decryptedUsername && enteredPassword == decryptedPassword) {
                 credentialManager.updateCredentials(this@LoginActivity)
+                credentialManager.deviceauth = true
                 launchMainActivity()
             }
         }
