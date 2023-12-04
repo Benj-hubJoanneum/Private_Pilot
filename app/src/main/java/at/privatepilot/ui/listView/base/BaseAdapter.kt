@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import at.privatepilot.R
 import at.privatepilot.model.FileType
+import at.privatepilot.model.nodeItem.NodeItem
 import at.privatepilot.model.nodeItem.viewmodel.NodeItemViewModel
 import at.privatepilot.restapi.service.NodeRepository
 import at.privatepilot.ui.dialog.NodeDialogFragment
@@ -29,6 +30,7 @@ abstract class BaseAdapter(
     protected var actionMode: ActionMode? = null
     private var cutItems = nodeRepository.cutItems
     var hitBoxHitted = false
+    var setupServerDestination = false
 
     override fun getItemCount(): Int {
         return itemList.size
@@ -68,6 +70,22 @@ abstract class BaseAdapter(
         notifyDataSetChanged()
     }
 
+    fun browseToServerDestination(nodeName: String) {
+        //nodeRepository.createNode(fileUri, this)
+        setupServerDestination = true
+
+        // Move the selected node to the first position in itemList
+        val updatedList = mutableListOf(NodeItemViewModel(NodeItem(nodeName)))
+        updatedList.addAll(itemList)
+
+        // Move the selected node to the first position in cutItems
+        cutItems.clear()
+        cutItems.add(nodeName)
+        actionMode = mainActivity.startActionMode(this@BaseAdapter)
+
+        notifyDataSetChanged()
+    }
+
     override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
         mode?.menuInflater?.inflate(R.menu.action_mode_menu, menu)
         return true
@@ -76,6 +94,7 @@ abstract class BaseAdapter(
     override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
         return false
     }
+
 
     override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
         when (item?.itemId) {
