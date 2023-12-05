@@ -29,11 +29,10 @@ class ControllerSocket(
 
     fun createNodes(url: String, file: File? = null) {
         val filepath = "$url/${file?.name ?: ""}"
-        sendToServer("POST", filepath) // send request to mkdir of filepath
 
         if (file != null) {
             val byteString = file.parseFileToBytes()
-            if (byteString != null) sendToServer(byteString) // send file to server
+            if (byteString != null) sendToServer("POST", filepath, byteString) // send file to server
         }
     }
 
@@ -206,8 +205,9 @@ class ControllerSocket(
         webSocketClient.sendToServer(requestMessage)
     }
 
-    private fun sendToServer(requestMessage: ByteString) {
-        webSocketClient.sendToServer(requestMessage)
+    private fun sendToServer(prefix: String, path: String, requestMessage: ByteString) {
+        val prefixAndPath = "$prefix:$path"
+        webSocketClient.sendToServer(prefixAndPath, requestMessage)
     }
 
     override fun onMessageReceived(message: String) {

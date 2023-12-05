@@ -22,11 +22,8 @@ class WebSocketClient(private val callback: WebSocketCallback) {
 
     private val client = OkHttpClient()
     private val wsUrl = "ws://10.0.0.245:8080" // WebSocket URL
-    private val publicKeyUrl = "http://10.0.0.245:8081/public-key" // Public key URL
 
     private var webSocket: WebSocket? = null
-    private var reconnectionExecutor: ScheduledExecutorService? = null
-    private val reconnectionDelay: Long = 2 // seconds
 
     private val credentialManager = CredentialManager.getInstance()
 
@@ -34,10 +31,8 @@ class WebSocketClient(private val callback: WebSocketCallback) {
 
     private fun getConnection(): WebSocket {
         runBlocking {
-
             if (webSocket == null || webSocket?.send("Ping") == false) {
                 crypt = CryptoUtils()
-               // crypt.serverPublicKey = fetchServerPublicKey() // er fragt den immer wieder an
                 webSocket = createWebSocket(crypt.encrypt(credentialManager.name), crypt.encrypt(credentialManager.token))
             }
         }
@@ -49,10 +44,8 @@ class WebSocketClient(private val callback: WebSocketCallback) {
         val webSocketListener = object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 super.onOpen(webSocket, response)
-
-                webSocket.send("WebSocket connection opened")
                 callback.onConnection()
-                //cancelReconnection()
+                webSocket.send("WebSocket connection opened")
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {
@@ -71,18 +64,12 @@ class WebSocketClient(private val callback: WebSocketCallback) {
                 super.onClosed(webSocket, code, reason)
                 println("WebSocket connection closed. Code: $code, Reason: $reason")
                 callback.onConnectionCancel()
-
-                // Start reconnection mechanism
-                scheduleReconnection()
             }
 
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
                 super.onFailure(webSocket, t, response)
                 println("WebSocket connection failed: ${t.message}")
                 callback.onConnectionFailure()
-
-                // Start reconnection mechanism
-                scheduleReconnection()
             }
         }
 
@@ -96,26 +83,14 @@ class WebSocketClient(private val callback: WebSocketCallback) {
         return client.newWebSocket(request, webSocketListener)
     }
 
-    private fun cancelReconnection() {
-        reconnectionExecutor?.shutdown()
+    fun sendToServer(requestMessage: String, connection: WebSocket = getConnection()) {
+        connection.send(requestMessage)
     }
 
-    private fun scheduleReconnection() {
-        reconnectionExecutor?.shutdown()
-        reconnectionExecutor = Executors.newSingleThreadScheduledExecutor()
-
-        reconnectionExecutor?.scheduleAtFixedRate(
-            { getConnection() },
-            reconnectionDelay, reconnectionDelay, TimeUnit.SECONDS
-        )
-    }
-
-    fun sendToServer(requestMessage: String) {
-        getConnection().send(requestMessage)
-    }
-
-    fun sendToServer(requestMessage: ByteString) {
-        getConnection().send(requestMessage)
+    fun sendToServer(prefix: String, payload: ByteString) {
+        val connection = getConnection()
+        sendToServer(prefix, connection)
+        connection.send(payload)
     }
 
     interface WebSocketCallback {
