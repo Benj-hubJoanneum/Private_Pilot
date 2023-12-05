@@ -101,10 +101,9 @@ class NodeRepository() : ControllerSocket.ControllerCallback {
 
     fun createNode(file: Uri, context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
-            val path = _directoryPointer.value ?: ""
             val data = getThisFile(file, context)
 
-            controllerNode.createNodes(path, data)
+            controllerNode.createNodes("", data)
         }
     }
 

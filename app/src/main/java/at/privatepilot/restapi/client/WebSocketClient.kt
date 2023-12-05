@@ -30,12 +30,14 @@ class WebSocketClient(private val callback: WebSocketCallback) {
 
     private val credentialManager = CredentialManager.getInstance()
 
-    private var crypt = CryptoUtils()
+    private lateinit var crypt: CryptoUtils
 
     private fun getConnection(): WebSocket {
         runBlocking {
-            crypt.serverPublicKey = fetchServerPublicKey()
+
             if (webSocket == null || webSocket?.send("Ping") == false) {
+                crypt = CryptoUtils()
+               // crypt.serverPublicKey = fetchServerPublicKey() // er fragt den immer wieder an
                 webSocket = createWebSocket(crypt.encrypt(credentialManager.name), crypt.encrypt(credentialManager.token))
             }
         }
@@ -50,7 +52,7 @@ class WebSocketClient(private val callback: WebSocketCallback) {
 
                 webSocket.send("WebSocket connection opened")
                 callback.onConnection()
-                cancelReconnection()
+                //cancelReconnection()
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {
@@ -92,36 +94,6 @@ class WebSocketClient(private val callback: WebSocketCallback) {
             .build()
 
         return client.newWebSocket(request, webSocketListener)
-    }
-
-    private fun getPublicKey(publicKeyPEM: String): PublicKey {
-        try {
-            val keyBytes = Base64.getDecoder().decode(publicKeyPEM.trimIndent()
-                .replace("-----BEGIN PUBLIC KEY-----", "")
-                .replace("-----END PUBLIC KEY-----", "")
-                .replace("\n", ""))
-            val keySpec = X509EncodedKeySpec(keyBytes)
-            val keyFactory = KeyFactory.getInstance("RSA")
-            return keyFactory.generatePublic(keySpec)
-        } catch (e: Exception) {
-            throw RuntimeException("Error building public key: ${e.message}")
-        }
-    }
-
-    private fun fetchServerPublicKey(): PublicKey? {
-        try {
-            val url = URL(publicKeyUrl)
-            val connection = url.openConnection() as HttpURLConnection
-            connection.requestMethod = "GET"
-
-            val reader = BufferedReader(InputStreamReader(connection.inputStream))
-            val publicKeyPEM = reader.readText()
-
-            return getPublicKey(publicKeyPEM)
-        } catch (e: Exception) {
-            println("Error fetching or building public key: ${e.message}")
-        }
-        return null
     }
 
     private fun cancelReconnection() {
