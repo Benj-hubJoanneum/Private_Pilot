@@ -1,5 +1,6 @@
 package at.privatepilot.restapi.client
 
+import okio.ByteString
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -16,8 +17,8 @@ class CryptoUtils {
 
     private val cipher: Cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding")
     var serverPublicKey: PublicKey? = null
-    var clientPublicKey: PublicKey? = null
-    private var clientPrivateKey: PrivateKey? = null
+    var publicKey: PublicKey? = null
+    private var privateKey: PrivateKey? = null
 
     init {
         generateKeyPair()
@@ -45,7 +46,7 @@ class CryptoUtils {
             for (encryptedChunk in encryptedChunks) {
                 val encryptedBytes = Base64.getDecoder().decode(encryptedChunk)
                 val cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding")
-                cipher.init(Cipher.DECRYPT_MODE, clientPrivateKey)
+                cipher.init(Cipher.DECRYPT_MODE, privateKey)
 
                 val decryptedBytes = cipher.doFinal(encryptedBytes)
 
@@ -60,14 +61,39 @@ class CryptoUtils {
         return ""
     }
 
+    fun encrypt(plaintext: ByteString): ByteString {
+        try {
+            cipher.init(Cipher.ENCRYPT_MODE, serverPublicKey)
+
+            val encryptedBytes = cipher.doFinal(plaintext.toByteArray())
+            return ByteString.of(*encryptedBytes)
+        } catch (e: Exception) {
+            println("Error during encryption: ${e.message}")
+        }
+        return ByteString.EMPTY
+    }
+
+    fun decrypt(plaintext: ByteString): ByteString {
+        try {
+            cipher.init(Cipher.DECRYPT_MODE, privateKey)
+
+            val encryptedBytes = cipher.doFinal(plaintext.toByteArray())
+            return ByteString.of(*encryptedBytes)
+        } catch (e: Exception) {
+            println("Error during encryption: ${e.message}")
+        }
+        return ByteString.EMPTY
+    }
+
+
     private fun generateKeyPair() {
         try {
             val keyPairGenerator = KeyPairGenerator.getInstance("RSA")
             keyPairGenerator.initialize(2048)
             val keyPair = keyPairGenerator.generateKeyPair()
 
-            clientPublicKey = keyPair.public
-            clientPrivateKey = keyPair.private
+            publicKey = keyPair.public
+            privateKey = keyPair.private
         } catch (e: Exception) {
             println("Error generating key pair: ${e.message}")
         }

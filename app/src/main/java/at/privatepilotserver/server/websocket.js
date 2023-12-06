@@ -30,18 +30,22 @@ function startWebSocketServer(port) {
 
         ws.on('message', async (message) => {
             const buffer = Buffer.from(message);
-            const request = buffer.toString();
+            const encryptedRequest = buffer.toString();
 
-            if (request.startsWith('GET:')) {
-                handleGetRequest(ws, request);
-            } else if (request.startsWith('POST:')) {
-                handlePostRequest(ws, request);
-            } else if (request.startsWith('DELETE:')) {
-                handleDeleteRequest(ws, request);
-            } else if (request.startsWith('FIND:')) {
-                handleSearchRequest(ws, request);
-            } else if (request.startsWith('UPDATE:')) {
-                handleUpdateRequest(ws, request);
+            if (encryptedRequest !== 'Ping') {
+                const request = decodeWithKey(encryptedRequest);
+
+                if (request.startsWith('GET:')) {
+                    handleGetRequest(ws, request);
+                } else if (request.startsWith('POST:')) {
+                    handlePostRequest(ws, request);
+                } else if (request.startsWith('DELETE:')) {
+                    handleDeleteRequest(ws, request);
+                } else if (request.startsWith('FIND:')) {
+                    handleSearchRequest(ws, request);
+                } else if (request.startsWith('UPDATE:')) {
+                    handleUpdateRequest(ws, request);
+                }
             }
         });
 
@@ -100,7 +104,7 @@ function handlePostRequest(ws, request) {
 
     ws.once('message', (fileData) => {
         console.log(`Received file data for: ${filePath}`);
-        saveFileToServer(filePath, fileData);
+        saveFileToServer(filePath, fileData, ws);
     });
 }
 
@@ -111,6 +115,7 @@ function handleDeleteRequest(ws, request) {
     if (fs.existsSync(fullPath)) {
         fs.unlinkSync(fullPath);
         console.log(`Deleted file: ${fullPath}`);
+        handleGetRequest(ws, `Get:${pointer}`);
     }
 }
 
@@ -147,13 +152,14 @@ function sendFileToClient(ws, filePath) {
     });
 }
 
-function saveFileToServer(filePath, fileData) {
+function saveFileToServer(filePath, fileData, ws) {
     console.log(`Saving file to: ${filePath}`);
     fs.writeFile(filePath, fileData, (err) => {
         if (err) {
             console.error(`Error saving file: ${err.message}`);
         } else {
             console.log(`Saved file to: ${filePath}`);
+            handleGetRequest(ws, `Get:${pointer}`);
         }
     });
 }

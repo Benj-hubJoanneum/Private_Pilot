@@ -5,16 +5,6 @@ import okhttp3.*
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
-import java.security.KeyFactory
-import java.security.PublicKey
-import java.security.spec.X509EncodedKeySpec
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.TimeUnit
 
 import java.util.Base64
 
@@ -45,7 +35,6 @@ class WebSocketClient(private val callback: WebSocketCallback) {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 super.onOpen(webSocket, response)
                 callback.onConnection()
-                webSocket.send("WebSocket connection opened")
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {
@@ -77,20 +66,21 @@ class WebSocketClient(private val callback: WebSocketCallback) {
             .url(wsUrl)
             .addHeader("username", username)
             .addHeader("authorization", token)
-            .addHeader("publickey", Base64.getEncoder().encodeToString(crypt.clientPublicKey?.encoded))
+            .addHeader("publickey", Base64.getEncoder().encodeToString(crypt.publicKey?.encoded))
             .build()
 
         return client.newWebSocket(request, webSocketListener)
     }
 
     fun sendToServer(requestMessage: String, connection: WebSocket = getConnection()) {
-        connection.send(requestMessage)
+        val encryptedMessage = crypt.encrypt(requestMessage)
+        connection.send(encryptedMessage)
     }
 
     fun sendToServer(prefix: String, payload: ByteString) {
         val connection = getConnection()
-        sendToServer(prefix, connection)
-        connection.send(payload)
+        sendToServer(crypt.encrypt(prefix), connection)
+        connection.send(crypt.encrypt(payload))
     }
 
     interface WebSocketCallback {
