@@ -1,4 +1,4 @@
-const { getClientKey, encrypt, decodeWithKey } = require('./encryption');
+const { getClientKey, encrypt, decodeWithKey, decryptFile, isBase64 } = require('./encryption');
 const { validateUser } = require('./userAuth')
 
 const fs = require('fs');
@@ -7,7 +7,6 @@ const sharp = require('sharp');
 const WebSocket = require('ws');
 
 const BASE_DIRECTORY = 'C:/Users/lampr/Desktop/fileStorage';
-
 
 function startWebSocketServer(port) {
     const wss = new WebSocket.Server({ port: port });
@@ -29,24 +28,25 @@ function startWebSocketServer(port) {
         }
 
         ws.on('message', async (message) => {
-            const buffer = Buffer.from(message);
-            const encryptedRequest = buffer.toString();
 
-            if (encryptedRequest !== 'Ping') {
-                const request = decodeWithKey(encryptedRequest);
+                const encryptedRequest = message.toString();
 
-                if (request.startsWith('GET:')) {
-                    handleGetRequest(ws, request);
-                } else if (request.startsWith('POST:')) {
-                    handlePostRequest(ws, request);
-                } else if (request.startsWith('DELETE:')) {
-                    handleDeleteRequest(ws, request);
-                } else if (request.startsWith('FIND:')) {
-                    handleSearchRequest(ws, request);
-                } else if (request.startsWith('UPDATE:')) {
-                    handleUpdateRequest(ws, request);
+                if (encryptedRequest !== 'Ping') {
+                    const request = decodeWithKey(encryptedRequest);
+
+                    if (request.startsWith('GET:')) {
+                        handleGetRequest(ws, request);
+                    } else if (request.startsWith('POST:')) {
+                        handlePostRequest(ws, request);
+                    } else if (request.startsWith('DELETE:')) {
+                        handleDeleteRequest(ws, request);
+                    } else if (request.startsWith('FIND:')) {
+                        handleSearchRequest(ws, request);
+                    } else if (request.startsWith('UPDATE:')) {
+                        handleUpdateRequest(ws, request);
+                    }
                 }
-            }
+
         });
 
         ws.on('close', () => {
@@ -104,7 +104,10 @@ function handlePostRequest(ws, request) {
 
     ws.once('message', (fileData) => {
         console.log(`Received file data for: ${filePath}`);
-        saveFileToServer(filePath, fileData, ws);
+        const base64Data = fileData.toString();
+
+        let data = decryptFile(base64Data);
+        saveFileToServer(filePath, data, ws);
     });
 }
 

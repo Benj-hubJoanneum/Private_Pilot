@@ -97,9 +97,36 @@ function decodeWithKey(token) {
     }
 }
 
+function decryptFile(byteString) {
+    const decryptedChunks = [];
+    try {
+        const encryptedChunks = byteString.split('*');
+
+        for (const chunk of encryptedChunks) {
+            const buffer = Buffer.from(chunk, 'base64');
+
+            const decryptedBuffer = crypto.privateDecrypt({
+                key: privateKey,
+                passphrase: '',
+                padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+                oaepHash: 'sha256',
+            }, buffer);
+
+            decryptedChunks.push(decryptedBuffer);
+        }
+
+        const fileData = Buffer.concat(decryptedChunks);
+        return fileData;
+    } catch (error) {
+        console.error('Error during decryption:', error.message);
+        return decryptedChunks;
+    }
+}
+
 module.exports = {
     getClientKey,
     encrypt,
     decodeWithKey,
+    decryptFile,
     getPublicKey
 };

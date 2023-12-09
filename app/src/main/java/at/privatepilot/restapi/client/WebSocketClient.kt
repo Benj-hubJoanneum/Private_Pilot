@@ -79,8 +79,10 @@ class WebSocketClient(private val callback: WebSocketCallback) {
 
     fun sendToServer(prefix: String, payload: ByteString) {
         val connection = getConnection()
-        sendToServer(crypt.encrypt(prefix), connection)
-        connection.send(crypt.encrypt(payload))
+        sendToServer(prefix, connection)
+        val message = crypt.encrypt(payload)
+        connection.send(message)
+        //connection.send(payload)
     }
 
     interface WebSocketCallback {

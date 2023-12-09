@@ -1,7 +1,9 @@
 package at.privatepilot.restapi.client
 
 import okio.ByteString
+import okio.ByteString.Companion.encodeUtf8
 import java.io.BufferedReader
+import java.io.ByteArrayOutputStream
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
@@ -16,7 +18,7 @@ import javax.crypto.Cipher
 class CryptoUtils {
 
     private val cipher: Cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding")
-    var serverPublicKey: PublicKey? = null
+    private var serverPublicKey: PublicKey? = null
     var publicKey: PublicKey? = null
     private var privateKey: PrivateKey? = null
 
@@ -40,7 +42,6 @@ class CryptoUtils {
     fun decrypt(encryptedMessage: String): String {
         try {
             val encryptedChunks = encryptedMessage.split("*")
-
             val decryptedChunks = mutableListOf<String>()
 
             for (encryptedChunk in encryptedChunks) {
@@ -61,16 +62,32 @@ class CryptoUtils {
         return ""
     }
 
-    fun encrypt(plaintext: ByteString): ByteString {
+    fun encrypt(originalMessage: ByteString): String {
         try {
-            cipher.init(Cipher.ENCRYPT_MODE, serverPublicKey)
+            val maxChunkSize = 50
+            val encodedMessage = originalMessage.toByteArray()
+            val chunks = mutableListOf<ByteArray>()
 
-            val encryptedBytes = cipher.doFinal(plaintext.toByteArray())
-            return ByteString.of(*encryptedBytes)
+            for (i in encodedMessage.indices step maxChunkSize) {
+                val chunkSize = kotlin.math.min(maxChunkSize, encodedMessage.size - i)
+                val chunk = encodedMessage.copyOfRange(i, i + chunkSize)
+                chunks.add(chunk)
+            }
+
+            val encryptedChunks = mutableListOf<String>()
+
+            for (chunk in chunks) {
+                cipher.init(Cipher.ENCRYPT_MODE, serverPublicKey)
+                val encryptedBuffer = cipher.doFinal(chunk)
+                val encryptedBase64 = Base64.getEncoder().encodeToString(encryptedBuffer)
+                encryptedChunks.add(encryptedBase64)
+            }
+
+            return encryptedChunks.joinToString("*")
         } catch (e: Exception) {
             println("Error during encryption: ${e.message}")
         }
-        return ByteString.EMPTY
+        return ""
     }
 
     fun decrypt(plaintext: ByteString): ByteString {
