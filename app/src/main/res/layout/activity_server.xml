@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="at.privatepilot.server.ServerViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/localAddressTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="@{viewModel.localAddress}"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/internetAddressTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/localAddressTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:text="@{viewModel.internetAddress}"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/registerUserButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/internetAddressTextView"
+            android:layout_marginTop="16dp"
+            android:onClick="onRegisterUserClick"
+            android:text="Register User"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/stopServerButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/registerUserButton"
+            android:layout_marginTop="8dp"
+            android:onClick="onStopServerClick"
+            android:text="Stop Server"
+            android:gravity="center"/>
+
+    </LinearLayout>
+</layout>

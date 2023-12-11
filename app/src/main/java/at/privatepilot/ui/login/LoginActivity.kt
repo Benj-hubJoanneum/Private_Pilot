@@ -5,7 +5,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import at.privatepilot.MainActivity
 import at.privatepilot.databinding.LoginBinding
+
 import at.privatepilot.restapi.client.CredentialManager
+import at.privatepilot.server.ServerActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -36,6 +38,11 @@ class LoginActivity : AppCompatActivity() {
             launchRegisterActivity()
         }
 
+        binding.startServerTextView?.setOnClickListener {
+            // Start ServerActivity when "Start Server" is clicked
+            launchServerActivity()
+        }
+
         if (decryptedUsername == null && decryptedPassword == null) {
             launchRegisterActivity()
         }
@@ -49,6 +56,11 @@ class LoginActivity : AppCompatActivity() {
 
     private fun launchRegisterActivity() {
         val intent = Intent(this, RegisterActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun launchServerActivity() {
+        val intent = Intent(this, ServerActivity::class.java)
         startActivity(intent)
     }
 }
