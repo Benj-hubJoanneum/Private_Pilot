@@ -2,7 +2,6 @@
 *.class
 
 # Gradle build files
-*.gradle
 *.bin
 *.lock
 
@@ -29,7 +28,6 @@ hs_err_pid*
 replay_pid*
 
 # Gradle files
-.gradle/
 build/
 
 # Local configuration file (e.g., for API keys or credentials)
