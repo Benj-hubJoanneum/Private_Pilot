@@ -11,10 +11,10 @@ object CredentialManager {
     private const val PREFERENCES_NAME = "UserCredentials"
     private const val KEY_USERNAME = "username"
     private const val KEY_PASSWORD = "password"
-    private const val KEY_SERVER_IP_WAN = "ws://10.0.0.245:8080"
-    private const val KEY_SERVER_IP_LAN = "ws://10.0.0.245:8090"
-    private const val KEY_MAC = "ws://10.0.0.245:8090"
-    private const val KEY_SIM = "ws://10.0.0.245:8090"
+    private const val KEY_SERVER_IP_WAN = "ws://10.0.0.99:3002"
+    private const val KEY_SERVER_IP_LAN = "ws://10.0.0.99:3002"
+    private const val KEY_MAC = "ws://10.0.0.99:3001"
+    private const val KEY_SIM = "ws://10.0.0.99:3001"
 
     @Volatile
     private var instance: CredentialManager? = null

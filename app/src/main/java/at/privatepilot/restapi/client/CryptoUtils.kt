@@ -1,9 +1,7 @@
 package at.privatepilot.restapi.client
 
 import okio.ByteString
-import okio.ByteString.Companion.encodeUtf8
 import java.io.BufferedReader
-import java.io.ByteArrayOutputStream
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
@@ -15,6 +13,7 @@ import java.security.spec.X509EncodedKeySpec
 import java.util.Base64
 import javax.crypto.Cipher
 
+
 class CryptoUtils {
 
     private val cipher: Cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding")
@@ -24,7 +23,7 @@ class CryptoUtils {
 
     init {
         generateKeyPair()
-        serverPublicKey = fetchServerPublicKey("http://10.0.0.245:8081/public-key")
+        serverPublicKey = fetchServerPublicKey("http://10.0.0.99:3001/public-key")
     }
 
     fun encrypt(plaintext: String): String {
@@ -102,7 +101,6 @@ class CryptoUtils {
         return ByteString.EMPTY
     }
 
-
     private fun generateKeyPair() {
         try {
             val keyPairGenerator = KeyPairGenerator.getInstance("RSA")
@@ -130,6 +128,21 @@ class CryptoUtils {
         }
     }
 
+    fun getPublicKeyFromString(base64EncodedPublicKey: String): PublicKey? {
+        try {
+            // Decode Base64-encoded public key
+            val keyBytes: ByteArray =
+                Base64.getDecoder().decode(base64EncodedPublicKey)
+
+            // Create PublicKey instance
+            val keyFactory = KeyFactory.getInstance("RSA")
+            return keyFactory.generatePublic(X509EncodedKeySpec(keyBytes))
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
     fun fetchServerPublicKey(publicKeyUrl: String): PublicKey? {
         try {
             val url = URL(publicKeyUrl)
@@ -139,7 +152,7 @@ class CryptoUtils {
             val reader = BufferedReader(InputStreamReader(connection.inputStream))
             val publicKeyPEM = reader.readText()
 
-            return getPublicKey(publicKeyPEM)
+            return getPublicKeyFromString(publicKeyPEM)
         } catch (e: Exception) {
             println("Error fetching or building public key: ${e.message}")
         }

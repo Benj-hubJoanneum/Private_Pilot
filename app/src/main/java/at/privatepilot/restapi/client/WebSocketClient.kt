@@ -11,7 +11,7 @@ import java.util.Base64
 class WebSocketClient(private val callback: WebSocketCallback) {
 
     private val client = OkHttpClient()
-    private val wsUrl = "ws://10.0.0.245:8080" // WebSocket URL
+    private val wsUrl = "ws://10.0.0.99:3002/ws" // WebSocket URL
 
     private var webSocket: WebSocket? = null
 
@@ -23,7 +23,9 @@ class WebSocketClient(private val callback: WebSocketCallback) {
         runBlocking {
             if (webSocket == null || webSocket?.send("Ping") == false) {
                 crypt = CryptoUtils()
-                webSocket = createWebSocket(crypt.encrypt(credentialManager.name), crypt.encrypt(credentialManager.token))
+                webSocket = createWebSocket(
+                    credentialManager.name, credentialManager.token)
+                    //crypt.encrypt(credentialManager.name), crypt.encrypt(credentialManager.token))
             }
         }
         return webSocket as WebSocket
@@ -41,6 +43,7 @@ class WebSocketClient(private val callback: WebSocketCallback) {
                 super.onMessage(webSocket, text)
                 val decryptedMessage = crypt.decrypt(text)
                 callback.onMessageReceived(decryptedMessage)
+                //callback.onMessageReceived(text)
             }
 
             override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
@@ -66,7 +69,7 @@ class WebSocketClient(private val callback: WebSocketCallback) {
             .url(wsUrl)
             .addHeader("username", username)
             .addHeader("authorization", token)
-            .addHeader("publickey", Base64.getEncoder().encodeToString(crypt.publicKey?.encoded))
+            .addHeader("publickey", Base64.getEncoder().encodeToString(crypt.publicKey?.encoded)) //encrypt with public key
             .build()
 
         return client.newWebSocket(request, webSocketListener)
@@ -82,7 +85,6 @@ class WebSocketClient(private val callback: WebSocketCallback) {
         sendToServer(prefix, connection)
         val message = crypt.encrypt(payload)
         connection.send(message)
-        //connection.send(payload)
     }
 
     interface WebSocketCallback {

@@ -33,6 +33,8 @@ class ControllerSocket(
         if (file != null) {
             val byteString = file.parseFileToBytes()
             if (byteString != null) sendToServer("POST", filepath, byteString) // send file to server
+        } else {
+            sendToServer("POST", filepath) //mkdir at server
         }
     }
 

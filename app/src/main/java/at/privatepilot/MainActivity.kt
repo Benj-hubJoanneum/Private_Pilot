@@ -274,10 +274,12 @@ class MainActivity : AppCompatActivity(), NodeRepository.ConnectionCallback, Nod
                 val rootView = findViewById<ViewGroup>(android.R.id.content)
                 rootView.addView(loadingOverlay)
 
+                /*
                 window.setFlags(
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
                 )
+                */
 
                 isOverlayVisible = true
             }

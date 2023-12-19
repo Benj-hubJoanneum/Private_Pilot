@@ -17,13 +17,12 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val decryptedUsername = credentialManager.getStoredUsername(this@LoginActivity)
-        val decryptedPassword = credentialManager.getStoredPassword(this@LoginActivity)
-
         binding = LoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.loginButton.setOnClickListener {
+            val decryptedUsername = credentialManager.getStoredUsername(this@LoginActivity)
+            val decryptedPassword = credentialManager.getStoredPassword(this@LoginActivity)
             val enteredUsername = binding.usernameEditText.text.toString()
             val enteredPassword = binding.passwordEditText.text.toString()
 
@@ -43,9 +42,6 @@ class LoginActivity : AppCompatActivity() {
             launchServerActivity()
         }
 
-        if (decryptedUsername == null && decryptedPassword == null) {
-            launchRegisterActivity()
-        }
     }
 
     private fun launchMainActivity() {

@@ -30,7 +30,7 @@ class RegisterActivity : AppCompatActivity() {
             credentialManager.updateCredentials(this@RegisterActivity)
 
             GlobalScope.launch(Dispatchers.IO) {
-                httpClient.post("http://10.0.0.245:8081/register-user", username, credentialManager.token)
+                httpClient.post("http://10.0.0.99:3001/register-user", username, credentialManager.token)
             }
 
             finish()

@@ -1,9 +1,11 @@
 package at.privatepilot.server
 
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.wifi.WifiManager
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import at.privatepilot.databinding.ActivityServerBinding
@@ -20,17 +22,20 @@ import java.nio.ByteOrder
 
 class ServerActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: ServerViewModel
     private lateinit var binding: ActivityServerBinding
     private var websocketServer: Websocket? = null
     private var httpServer: Http? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
         binding = ActivityServerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this)[ServerViewModel::class.java]
+        val viewModel = ViewModelProvider(this)[ServerViewModel::class.java]
+        val encryption = Encryption()
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
@@ -40,24 +45,20 @@ class ServerActivity : AppCompatActivity() {
             val localIpAddress = getLocalIpAddress()
             val internetIpAddress = getInternetIpAddress()
 
-            // Update ViewModel with addresses
             viewModel.updateAddresses(localIpAddress, internetIpAddress)
         }
 
         binding.stopServerButton.setOnClickListener {
             stopServer()
         }
-        GlobalScope.launch(Dispatchers.Main) {
-            startServer()
+
+        GlobalScope.launch(Dispatchers.IO) {
+            httpServer = Http(3001, encryption, this@ServerActivity)
         }
-    }
 
-    private suspend fun startServer() {
-        // Start WebSocket server on port 8080
-        websocketServer = Websocket(8080)
-
-        // Start HTTP server on port 8081
-        httpServer = Http(8081)
+        GlobalScope.launch(Dispatchers.IO) {
+            websocketServer = Websocket(3002, encryption, this@ServerActivity)
+        }
     }
 
     private fun stopServer() {
