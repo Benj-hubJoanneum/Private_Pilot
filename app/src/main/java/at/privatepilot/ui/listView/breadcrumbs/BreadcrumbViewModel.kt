@@ -18,7 +18,7 @@ class BreadcrumbViewModel : ViewModel() {
         var path = str.replace("\\", "/")
         var name : String
 
-        while (path.isNotEmpty()) {
+        while (path.isNotEmpty() && path.contains('/')) {
             name = path.substringAfterLast('/')
             list.add(DirectoryBreadcrumbViewModel(DirectoryItem(name, path)))
             path = path.substringBeforeLast('/')

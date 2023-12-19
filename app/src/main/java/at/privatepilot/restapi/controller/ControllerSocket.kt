@@ -77,18 +77,13 @@ class ControllerSocket(
         val sourceFile = fileExist(urlSource, context)
         val targetFile = fileExist(urlTarget, context, write = true)
 
-        if (sourceFile.exists()) {
-            val finalDestinationPath = if (sourceFile.isDirectory) {
-                File(targetFile, sourceFile.name)
-            } else {
-                targetFile
-            }
+        val finalDestinationPath = if (sourceFile.isDirectory) File(targetFile, sourceFile.name) else targetFile
 
+        if (sourceFile.exists()) {
             moveFileOrDirectory(sourceFile, finalDestinationPath)
-            sendToServer("UPDATE", "$urlSource;$urlTarget")
-        } else {
-            println("Source file or directory does not exist: $urlSource")
         }
+
+        sendToServer("UPDATE", "$urlSource;$urlTarget")
     }
 
     fun deleteNodes(url: String) {

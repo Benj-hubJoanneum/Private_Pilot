@@ -38,8 +38,10 @@ class Websocket(private val port: Int, private val encryption: Encryption, priva
                     val username = call.request.headers["username"]
                     val authorization = call.request.headers["authorization"]
                     val publickey = call.request.headers["publickey"]
-                    userAuth.validateUser(username, authorization)
-                    encryption.getPublicKeyFromString(publickey) //decrypt with private key
+                    encryption.getPublicKeyFromString(publickey)
+                    val decodedUsername = username?.let { encryption.decrypt(it) }
+                    val decodedauthorization = authorization?.let { encryption.decrypt(it) }
+                    userAuth.validateUser(decodedUsername, decodedauthorization)
 
                     incoming.consumeEach { frame ->
                         when (frame) {
@@ -138,13 +140,13 @@ class Websocket(private val port: Int, private val encryption: Encryption, priva
     }
 
     private suspend fun handleDeleteRequest(session: DefaultWebSocketSession, request: String) {
-        val fullPath = Paths.get(BASE_DIRECTORY, request).normalize().toString()
+        val file = context.getExternalFilesDir("${BASE_DIRECTORY}/${request}")
 
-        if (File(fullPath).exists()) {
-            File(fullPath).delete()
-            println("Deleted file: $fullPath")
-            handleGetRequest(session, Paths.get(BASE_DIRECTORY).relativize(Paths.get(fullPath)).toString())
-        }
+        file?.delete()
+
+        println("Deleted file: $request")
+        handleGetRequest(session, pointer)
+
     }
 
     private fun listFileMetadata(directory: File): MetadataResponse {
@@ -180,7 +182,7 @@ class Websocket(private val port: Int, private val encryption: Encryption, priva
         val searchQuery = request
         val searchRegex = Regex(searchQuery, RegexOption.IGNORE_CASE)
 
-        val pointerDirectory = if (pointer.isNullOrBlank()) home else context.getExternalFilesDir(pointer)
+        val pointerDirectory = if (pointer.isNullOrBlank()) home else context.getExternalFilesDir("${BASE_DIRECTORY}/${pointer}")
 
         val searchResults = pointerDirectory?.let { searchFiles(it, searchRegex) }
 
@@ -214,23 +216,18 @@ class Websocket(private val port: Int, private val encryption: Encryption, priva
 
     private fun handleUpdateRequest(session: DefaultWebSocketSession, request: String) {
         val (sourcePath, destinationPath) = request.split(";")
-        val fullSourcePath = Paths.get(BASE_DIRECTORY, sourcePath).toString()
-        val fullDestinationPath = Paths.get(BASE_DIRECTORY, destinationPath).toString()
-
-        println("Source Path: $fullSourcePath")
-        println("Destination Path: $fullDestinationPath")
+        val sourceFile = context.getExternalFilesDir("${BASE_DIRECTORY}${sourcePath}")
 
         try {
-            if (File(fullSourcePath).exists()) {
-                val isSourceDirectory = File(fullSourcePath).isDirectory
-                val finalDestinationPath = if (isSourceDirectory) Paths.get(fullDestinationPath, File(fullSourcePath).name).toString()
-                else Paths.get(fullDestinationPath, File(fullSourcePath).name).toString()
+            if (sourceFile?.exists() == true) {
 
-                println("Final Destination Path: $finalDestinationPath")
-                File(fullSourcePath).renameTo(File(finalDestinationPath))
-                println("Moved file/directory from $fullSourcePath to $finalDestinationPath")
+                val destinationFile = if (!destinationPath.contains('.')) controller.fileExist("$destinationPath/${sourceFile.name}", true)
+                    else controller.fileExist("/$destinationPath", true)
+
+                sourceFile.copyTo(destinationFile, true)
+                sourceFile.delete()
             } else {
-                println("Source path does not exist: $fullSourcePath")
+                println("Source path does not exist: $sourcePath")
             }
         } catch (error: Exception) {
             println("Error moving file/directory: ${error.message}")

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Your splash screen background color or image -->
+    <item android:drawable="@color/white" />
+
+    <!-- Your app icon in the center of the screen -->
+    <item
+        android:drawable="@mipmap/ic_appicon"
+        android:gravity="center" />
+
+</layer-list>

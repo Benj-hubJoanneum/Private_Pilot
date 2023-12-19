@@ -43,7 +43,6 @@ class WebSocketClient(private val callback: WebSocketCallback) {
                 super.onMessage(webSocket, text)
                 val decryptedMessage = crypt.decrypt(text)
                 callback.onMessageReceived(decryptedMessage)
-                //callback.onMessageReceived(text)
             }
 
             override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
@@ -67,8 +66,8 @@ class WebSocketClient(private val callback: WebSocketCallback) {
 
         val request = Request.Builder()
             .url(wsUrl)
-            .addHeader("username", username)
-            .addHeader("authorization", token)
+            .addHeader("username", crypt.encrypt(username))
+            .addHeader("authorization", crypt.encrypt(token))
             .addHeader("publickey", Base64.getEncoder().encodeToString(crypt.publicKey?.encoded)) //encrypt with public key
             .build()
 

@@ -156,9 +156,8 @@ abstract class BaseAdapter(
         }
     }
 
-    private fun editSelectedItem(newName: String) {
-        if (selectedItems.size == 1)
-            nodeRepository.moveNodes(mainActivity, itemList[selectedItems.first()].path, newName)
+    private fun editSelectedItem(node: NodeItemViewModel, newName: String) {
+        nodeRepository.moveNodes(mainActivity, node.path, newName)
     }
 
     private fun showEditDialog() {
@@ -177,7 +176,7 @@ abstract class BaseAdapter(
                 .setTitle("Edit Item Name")
                 .setPositiveButton("OK") { _, _ ->
                     val newName = editText.text?.toString() ?: ""
-                    editSelectedItem(newName)
+                    editSelectedItem(fileItem, newName)
                 }
                 .setNegativeButton("Cancel") { dialog, _ ->
                     dialog.cancel()
