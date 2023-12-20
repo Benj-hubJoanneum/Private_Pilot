@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.ThumbnailUtils
-import android.util.Size
 import at.privatepilot.server.model.Metadata
 import at.privatepilot.server.model.MetadataResponse
 import com.google.gson.Gson
@@ -146,7 +145,6 @@ class Websocket(private val port: Int, private val encryption: Encryption, priva
 
         println("Deleted file: $request")
         handleGetRequest(session, pointer)
-
     }
 
     private fun listFileMetadata(directory: File): MetadataResponse {
@@ -214,24 +212,23 @@ class Websocket(private val port: Int, private val encryption: Encryption, priva
         return MetadataResponse(items)
     }
 
-    private fun handleUpdateRequest(session: DefaultWebSocketSession, request: String) {
+    private suspend fun handleUpdateRequest(session: DefaultWebSocketSession, request: String) {
         val (sourcePath, destinationPath) = request.split(";")
         val sourceFile = context.getExternalFilesDir("${BASE_DIRECTORY}${sourcePath}")
 
         try {
             if (sourceFile?.exists() == true) {
-
-                val destinationFile = if (!destinationPath.contains('.')) controller.fileExist("$destinationPath/${sourceFile.name}", true)
-                    else controller.fileExist("/$destinationPath", true)
-
+                val destinationFile = controller.fileExist(destinationPath, true)
                 sourceFile.copyTo(destinationFile, true)
-                sourceFile.delete()
+                if (destinationFile.exists())
+                    sourceFile.delete()
             } else {
                 println("Source path does not exist: $sourcePath")
             }
         } catch (error: Exception) {
             println("Error moving file/directory: ${error.message}")
         }
+        handleGetRequest(session, pointer)
     }
 
     private suspend fun sendFilePreviews(session: DefaultWebSocketSession, items: MetadataResponse) {

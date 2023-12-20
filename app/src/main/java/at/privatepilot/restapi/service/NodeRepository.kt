@@ -119,8 +119,7 @@ class NodeRepository() : ControllerSocket.ControllerCallback {
     fun moveNodes(context: Context, path: String) {
         CoroutineScope(Dispatchers.IO).launch {
             val pointer = directoryPointer.value ?: ""
-            controllerNode.updateNodes(context, path, pointer)
-            controllerNode.requestNodes(pointer)
+            controllerNode.updateNodes(context, path, "${pointer}${path}")
             directoryListRemoveEntry(path)
         }
     }
@@ -128,8 +127,7 @@ class NodeRepository() : ControllerSocket.ControllerCallback {
     fun moveNodes(context: Context, path: String, newName: String) {
         CoroutineScope(Dispatchers.IO).launch {
             val pointer = directoryPointer.value ?: ""
-            controllerNode.updateNodes(context, path, newName)
-            controllerNode.requestNodes(pointer)
+            controllerNode.updateNodes(context, path, "${pointer}/${newName}")
             directoryListRemoveEntry(path)
         }
     }
