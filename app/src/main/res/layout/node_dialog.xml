@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.dialog.NodeDialogFragment">
+    tools:context=".client.ui.dialog.NodeDialogFragment">
 
     <data>
         <variable
             name="viewModel"
-            type="at.privatepilot.model.nodeItem.viewmodel.NodeItemViewModel" />
+            type="at.privatepilot.client.model.nodeItem.viewmodel.NodeItemViewModel" />
     </data>
 
     <LinearLayout

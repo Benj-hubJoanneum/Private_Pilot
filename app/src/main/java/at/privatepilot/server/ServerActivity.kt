@@ -9,7 +9,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import at.privatepilot.databinding.ActivityServerBinding
-import at.privatepilot.ui.login.LoginActivity
+import at.privatepilot.client.ui.login.LoginActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

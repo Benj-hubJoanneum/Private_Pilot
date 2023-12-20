@@ -1,4 +1,4 @@
-package at.privatepilot.restapi.service
+package at.privatepilot.client.restapi.service
 
 import android.content.ContentResolver
 import android.content.Context
@@ -9,11 +9,11 @@ import android.provider.OpenableColumns
 import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import at.privatepilot.model.FileType
-import at.privatepilot.model.INode
-import at.privatepilot.model.directoryItem.DirectoryItem
-import at.privatepilot.model.nodeItem.NodeItem
-import at.privatepilot.restapi.controller.ControllerSocket
+import at.privatepilot.client.model.FileType
+import at.privatepilot.client.model.INode
+import at.privatepilot.client.model.directoryItem.DirectoryItem
+import at.privatepilot.client.model.nodeItem.NodeItem
+import at.privatepilot.client.restapi.controller.ControllerSocket
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

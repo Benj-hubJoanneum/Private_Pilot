@@ -1,17 +1,18 @@
-package at.privatepilot.ui.listView.grid
+package at.privatepilot.client.ui.listView.grid
 
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import at.privatepilot.MainActivity
 import at.privatepilot.R
-import at.privatepilot.ui.listView.base.BaseAdapter
-import at.privatepilot.ui.listView.base.BaseFragment
+import at.privatepilot.client.ui.listView.base.BaseAdapter
+import at.privatepilot.client.ui.listView.base.BaseFragment
 
 class GridFragment : BaseFragment() {
 
     override fun createAdapter(): BaseAdapter {
-        return GridAdapter(emptyList(), requireActivity() as at.privatepilot.MainActivity)
+        return GridAdapter(emptyList(), requireActivity() as MainActivity)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -1,4 +1,4 @@
-package at.privatepilot.ui.dialog
+package at.privatepilot.client.ui.dialog
 
 import android.app.AlertDialog
 import android.content.Context

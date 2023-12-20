@@ -1,4 +1,4 @@
-package at.privatepilot.ui.navView
+package at.privatepilot.client.ui.navView
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import at.privatepilot.model.directoryItem.viewmodel.DirectoryItemViewModel
-import at.privatepilot.restapi.service.NodeRepository
+import at.privatepilot.client.model.directoryItem.viewmodel.DirectoryItemViewModel
+import at.privatepilot.client.restapi.service.NodeRepository
 import at.privatepilot.R
 import at.privatepilot.databinding.DirectoryNodeBinding
 

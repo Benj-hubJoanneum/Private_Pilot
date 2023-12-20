@@ -2,7 +2,7 @@
     <data>
         <variable
             name="viewModel"
-            type="at.privatepilot.model.directoryItem.viewmodel.DirectoryItemViewModel" />
+            type="at.privatepilot.client.model.directoryItem.viewmodel.DirectoryItemViewModel" />
     </data>
 
     <LinearLayout

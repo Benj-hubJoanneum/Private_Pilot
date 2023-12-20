@@ -1,9 +1,9 @@
-package at.privatepilot.model.directoryItem.viewmodel
+package at.privatepilot.client.model.directoryItem.viewmodel
 
 import android.graphics.Color
 import android.view.View
 import androidx.lifecycle.ViewModel
-import at.privatepilot.model.directoryItem.DirectoryItem
+import at.privatepilot.client.model.directoryItem.DirectoryItem
 
 class DirectoryBreadcrumbViewModel(directoryItem: DirectoryItem) : ViewModel() {
     var name: String = directoryItem.name

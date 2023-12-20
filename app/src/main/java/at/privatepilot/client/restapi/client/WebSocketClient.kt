@@ -1,4 +1,4 @@
-package at.privatepilot.restapi.client
+package at.privatepilot.client.restapi.client
 
 import kotlinx.coroutines.runBlocking
 import okhttp3.*
@@ -24,7 +24,8 @@ class WebSocketClient(private val callback: WebSocketCallback) {
             if (webSocket == null || webSocket?.send("Ping") == false) {
                 crypt = CryptoUtils()
                 webSocket = createWebSocket(
-                    credentialManager.name, credentialManager.token)
+                    CredentialManager.name, CredentialManager.token
+                )
                     //crypt.encrypt(credentialManager.name), crypt.encrypt(credentialManager.token))
             }
         }

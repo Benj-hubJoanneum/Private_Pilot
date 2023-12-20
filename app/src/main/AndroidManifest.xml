@@ -25,7 +25,7 @@
         android:networkSecurityConfig="@xml/network_security_config">
 
         <activity
-            android:name=".ui.login.LoginActivity"
+            android:name=".client.ui.login.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.PrivatePilot.NoActionBar">
 
@@ -37,7 +37,7 @@
         </activity>
 
         <activity
-            android:name=".ui.login.RegisterActivity"
+            android:name=".client.ui.login.RegisterActivity"
             android:exported="true"
             android:theme="@style/Theme.PrivatePilot.NoActionBar">
             <intent-filter>

@@ -1,4 +1,4 @@
-package at.privatepilot.ui.listView.breadcrumbs
+package at.privatepilot.client.ui.listView.breadcrumbs
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import at.privatepilot.R
 import at.privatepilot.databinding.BreadcrumbItemBinding
-import at.privatepilot.model.directoryItem.viewmodel.DirectoryBreadcrumbViewModel
-import at.privatepilot.restapi.service.NodeRepository
+import at.privatepilot.client.model.directoryItem.viewmodel.DirectoryBreadcrumbViewModel
+import at.privatepilot.client.restapi.service.NodeRepository
 
 class BreadcrumbsAdapter : RecyclerView.Adapter<BreadcrumbsAdapter.HorizontalViewHolder>() {
 

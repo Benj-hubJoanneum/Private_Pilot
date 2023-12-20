@@ -1,4 +1,4 @@
-package at.privatepilot.model
+package at.privatepilot.client.model
 
 interface INode {
     var parentFolder : String

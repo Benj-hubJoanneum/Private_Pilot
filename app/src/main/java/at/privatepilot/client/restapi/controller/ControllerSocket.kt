@@ -1,4 +1,4 @@
-package at.privatepilot.restapi.controller
+package at.privatepilot.client.restapi.controller
 
 import android.content.Context
 import android.content.Intent
@@ -7,12 +7,12 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.widget.Toast
 import androidx.core.content.FileProvider
-import at.privatepilot.model.INode
-import at.privatepilot.model.directoryItem.DirectoryItem
-import at.privatepilot.model.nodeItem.NodeItem
-import at.privatepilot.restapi.client.WebSocketClient
-import at.privatepilot.restapi.model.MetadataResponse
-import at.privatepilot.restapi.service.NodeRepository
+import at.privatepilot.client.model.INode
+import at.privatepilot.client.model.directoryItem.DirectoryItem
+import at.privatepilot.client.model.nodeItem.NodeItem
+import at.privatepilot.client.restapi.client.WebSocketClient
+import at.privatepilot.client.restapi.model.MetadataResponse
+import at.privatepilot.client.restapi.service.NodeRepository
 import com.google.gson.Gson
 import okio.ByteString
 import okio.ByteString.Companion.toByteString
@@ -22,7 +22,8 @@ import java.util.Base64
 
 class ControllerSocket(
     private val nodeRepository: NodeRepository,
-    private val callback: ControllerCallback) :
+    private val callback: ControllerCallback
+) :
     WebSocketClient.WebSocketCallback {
     private val webSocketClient: WebSocketClient = WebSocketClient(this)
     private var context: Context? = null

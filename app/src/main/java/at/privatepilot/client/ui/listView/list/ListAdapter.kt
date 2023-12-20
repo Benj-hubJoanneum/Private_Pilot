@@ -1,10 +1,10 @@
-package at.privatepilot.ui.listView.list
+package at.privatepilot.client.ui.listView.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import at.privatepilot.databinding.FileNodeBinding
-import at.privatepilot.model.nodeItem.viewmodel.NodeItemViewModel
-import at.privatepilot.ui.listView.base.BaseAdapter
+import at.privatepilot.client.model.nodeItem.viewmodel.NodeItemViewModel
+import at.privatepilot.client.ui.listView.base.BaseAdapter
 
 class ListAdapter(
     itemList: List<NodeItemViewModel>,

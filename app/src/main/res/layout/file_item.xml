@@ -2,7 +2,7 @@
     <data>
         <variable
             name="viewModel"
-            type="at.privatepilot.model.nodeItem.viewmodel.NodeItemViewModel" />
+            type="at.privatepilot.client.model.nodeItem.viewmodel.NodeItemViewModel" />
     </data>
 
     <LinearLayout

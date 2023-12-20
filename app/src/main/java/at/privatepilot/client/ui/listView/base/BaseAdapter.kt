@@ -1,4 +1,4 @@
-package at.privatepilot.ui.listView.base
+package at.privatepilot.client.ui.listView.base
 
 import android.app.AlertDialog
 import android.graphics.Color
@@ -13,11 +13,11 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import at.privatepilot.R
-import at.privatepilot.model.FileType
-import at.privatepilot.model.nodeItem.NodeItem
-import at.privatepilot.model.nodeItem.viewmodel.NodeItemViewModel
-import at.privatepilot.restapi.service.NodeRepository
-import at.privatepilot.ui.dialog.NodeDialogFragment
+import at.privatepilot.client.model.FileType
+import at.privatepilot.client.model.nodeItem.NodeItem
+import at.privatepilot.client.model.nodeItem.viewmodel.NodeItemViewModel
+import at.privatepilot.client.restapi.service.NodeRepository
+import at.privatepilot.client.ui.dialog.NodeDialogFragment
 import com.google.android.material.textfield.TextInputEditText
 
 abstract class BaseAdapter(

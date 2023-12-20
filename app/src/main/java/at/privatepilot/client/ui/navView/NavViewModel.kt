@@ -1,12 +1,12 @@
-package at.privatepilot.ui.navView
+package at.privatepilot.client.ui.navView
 
 import android.content.ContentValues
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import at.privatepilot.model.directoryItem.DirectoryItem
-import at.privatepilot.model.directoryItem.viewmodel.DirectoryItemViewModel
+import at.privatepilot.client.model.directoryItem.DirectoryItem
+import at.privatepilot.client.model.directoryItem.viewmodel.DirectoryItemViewModel
 
 class NavViewModel : ViewModel() {
 

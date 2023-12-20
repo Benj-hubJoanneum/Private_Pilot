@@ -1,12 +1,12 @@
-package at.privatepilot.ui.listView.breadcrumbs
+package at.privatepilot.client.ui.listView.breadcrumbs
 
 import android.graphics.Color
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import at.privatepilot.model.directoryItem.DirectoryItem
-import at.privatepilot.model.directoryItem.viewmodel.DirectoryBreadcrumbViewModel
+import at.privatepilot.client.model.directoryItem.DirectoryItem
+import at.privatepilot.client.model.directoryItem.viewmodel.DirectoryBreadcrumbViewModel
 
 class BreadcrumbViewModel : ViewModel() {
     private val _itemList = MutableLiveData<List<DirectoryBreadcrumbViewModel>>()

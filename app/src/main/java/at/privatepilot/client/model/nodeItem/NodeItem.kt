@@ -1,9 +1,9 @@
-package at.privatepilot.model.nodeItem
+package at.privatepilot.client.model.nodeItem
 
 import android.graphics.Bitmap
-import at.privatepilot.model.FileType
-import at.privatepilot.model.INode
-import at.privatepilot.restapi.model.IMetadata
+import at.privatepilot.client.model.FileType
+import at.privatepilot.client.model.INode
+import at.privatepilot.client.restapi.model.IMetadata
 
 data class NodeItem(
     override var name: String,

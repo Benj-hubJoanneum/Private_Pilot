@@ -1,13 +1,13 @@
-package at.privatepilot.ui.listView.base
+package at.privatepilot.client.ui.listView.base
 
 import android.content.ContentValues
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import at.privatepilot.model.INode
-import at.privatepilot.model.nodeItem.NodeItem
-import at.privatepilot.model.nodeItem.viewmodel.NodeItemViewModel
+import at.privatepilot.client.model.INode
+import at.privatepilot.client.model.nodeItem.NodeItem
+import at.privatepilot.client.model.nodeItem.viewmodel.NodeItemViewModel
 
 class RecyclerViewModel : ViewModel() {
 

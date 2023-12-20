@@ -1,4 +1,4 @@
-package at.privatepilot.restapi.client
+package at.privatepilot.client.restapi.client
 
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient

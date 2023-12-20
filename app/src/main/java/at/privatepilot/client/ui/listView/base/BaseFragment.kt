@@ -1,4 +1,4 @@
-package at.privatepilot.ui.listView.base
+package at.privatepilot.client.ui.listView.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import at.privatepilot.R
 import at.privatepilot.databinding.FragmentListviewBinding
-import at.privatepilot.restapi.service.NodeRepository
-import at.privatepilot.ui.listView.breadcrumbs.BreadcrumbViewModel
-import at.privatepilot.ui.listView.breadcrumbs.BreadcrumbsAdapter
+import at.privatepilot.client.restapi.service.NodeRepository
+import at.privatepilot.client.ui.listView.breadcrumbs.BreadcrumbViewModel
+import at.privatepilot.client.ui.listView.breadcrumbs.BreadcrumbsAdapter
 
 abstract class BaseFragment : Fragment() {
     private var _binding: FragmentListviewBinding? = null

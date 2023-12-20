@@ -1,11 +1,11 @@
-package at.privatepilot.model.nodeItem.viewmodel
+package at.privatepilot.client.model.nodeItem.viewmodel
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import androidx.lifecycle.ViewModel
 import at.privatepilot.R
-import at.privatepilot.model.FileType
-import at.privatepilot.model.nodeItem.NodeItem
+import at.privatepilot.client.model.FileType
+import at.privatepilot.client.model.nodeItem.NodeItem
 
 class NodeItemViewModel(nodeItem: NodeItem) : ViewModel() {
     var name: String = if (nodeItem.name.contains('/')) {

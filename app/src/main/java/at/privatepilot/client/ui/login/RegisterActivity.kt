@@ -1,10 +1,10 @@
-package at.privatepilot.ui.login
+package at.privatepilot.client.ui.login
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import at.privatepilot.databinding.RegisterBinding
-import at.privatepilot.restapi.client.HttpClient
-import at.privatepilot.restapi.client.CredentialManager
+import at.privatepilot.client.restapi.client.HttpClient
+import at.privatepilot.client.restapi.client.CredentialManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

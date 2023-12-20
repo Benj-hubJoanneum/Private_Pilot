@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/nav_listview"
-        android:name="at.privatepilot.ui.listView.list.ListFragment"
+        android:name="at.privatepilot.client.ui.listView.list.ListFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_listview" />
 
     <fragment
         android:id="@+id/nav_gridview"
-        android:name="at.privatepilot.ui.listView.grid.GridFragment"
+        android:name="at.privatepilot.client.ui.listView.grid.GridFragment"
         android:label="@string/menu_gridview"
         tools:layout="@layout/fragment_listview" />
 

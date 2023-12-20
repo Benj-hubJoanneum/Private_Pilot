@@ -1,4 +1,4 @@
-package at.privatepilot.restapi.model
+package at.privatepilot.client.restapi.model
 
 class Metadata(
     override val name: String,

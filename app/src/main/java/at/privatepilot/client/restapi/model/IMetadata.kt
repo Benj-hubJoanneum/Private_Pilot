@@ -1,4 +1,4 @@
-package at.privatepilot.restapi.model
+package at.privatepilot.client.restapi.model
 
 interface IMetadata {
     val name: String

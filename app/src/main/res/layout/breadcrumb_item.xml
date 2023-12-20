@@ -3,7 +3,7 @@
     <data>
         <variable
             name="viewModel"
-            type="at.privatepilot.model.directoryItem.viewmodel.DirectoryBreadcrumbViewModel" />
+            type="at.privatepilot.client.model.directoryItem.viewmodel.DirectoryBreadcrumbViewModel" />
     </data>
 
     <LinearLayout

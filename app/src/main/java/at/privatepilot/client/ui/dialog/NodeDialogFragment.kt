@@ -1,4 +1,4 @@
-package at.privatepilot.ui.dialog
+package at.privatepilot.client.ui.dialog
 
 import android.content.Context
 import android.os.Bundle
@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import at.privatepilot.R
 import at.privatepilot.databinding.NodeDialogBinding
-import at.privatepilot.model.nodeItem.viewmodel.NodeItemViewModel
-import at.privatepilot.restapi.service.NodeRepository
+import at.privatepilot.client.model.nodeItem.viewmodel.NodeItemViewModel
+import at.privatepilot.client.restapi.service.NodeRepository
 
 class NodeDialogFragment (
     private val context: Context,

@@ -1,8 +1,8 @@
-package at.privatepilot.model.directoryItem
+package at.privatepilot.client.model.directoryItem
 
-import at.privatepilot.model.FileType
-import at.privatepilot.model.ITreeNode
-import at.privatepilot.restapi.model.IMetadata
+import at.privatepilot.client.model.FileType
+import at.privatepilot.client.model.ITreeNode
+import at.privatepilot.client.restapi.model.IMetadata
 
 data class DirectoryItem(
     override var name: String,

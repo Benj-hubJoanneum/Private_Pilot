@@ -1,4 +1,4 @@
-package at.privatepilot.restapi.client
+package at.privatepilot.client.restapi.client
 
 import android.content.Context
 

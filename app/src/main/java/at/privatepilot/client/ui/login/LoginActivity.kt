@@ -1,4 +1,4 @@
-package at.privatepilot.ui.login
+package at.privatepilot.client.ui.login
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import at.privatepilot.MainActivity
 import at.privatepilot.databinding.LoginBinding
 
-import at.privatepilot.restapi.client.CredentialManager
+import at.privatepilot.client.restapi.client.CredentialManager
 import at.privatepilot.server.ServerActivity
 
 class LoginActivity : AppCompatActivity() {
