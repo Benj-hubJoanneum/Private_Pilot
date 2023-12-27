@@ -1,24 +1,39 @@
 package at.privatepilot.client.restapi.client
 
 import android.content.Context
+import android.util.Log
 import at.privatepilot.client.ui.login.RegisterActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 object NetworkRepository {
 
     var registerServer = ""
     var keyServer = ""
     var websocketServer = ""
+    val credentialManager = CredentialManager.getInstance()
 
     fun getServerIP(context: Context) {
-        CredentialManager.updateCredentials(context)
-        if(CredentialManager.getHomeNetworkSSID(context) == getHomeNetworkSSID(context)){
-            registerServer = "${CredentialManager.lan}:${CredentialManager.port + 2}"
-            keyServer = "${CredentialManager.lan}:${CredentialManager.port + 1}"
-            websocketServer = "${CredentialManager.lan}:${CredentialManager.port}"
+        credentialManager.updateCredentials(context)
+        if(credentialManager.getHomeNetworkSSID(context) == getHomeNetworkSSID(context)){
+            registerServer = "${credentialManager.lan}:${credentialManager.port + 2}"
+            keyServer = "${credentialManager.lan}:${credentialManager.port + 1}"
+            websocketServer = "${credentialManager.lan}:${credentialManager.port}"
+
+            GlobalScope.launch(Dispatchers.IO) {
+                try {
+                    val response = HttpClient().get("http://${NetworkRepository.keyServer}/ip")
+                    credentialManager.saveWANAddress(context, response)
+                } catch (e: Exception) {
+                    Log.d("Error", "couldn't call WAN ip")
+                }
+            }
+
         } else {
-            registerServer = "${CredentialManager.wan}:${CredentialManager.port + 2}"
-            keyServer = "${CredentialManager.wan}:${CredentialManager.port + 1}"
-            websocketServer = "${CredentialManager.wan}:${CredentialManager.port}"
+            registerServer = "${credentialManager.wan}:${credentialManager.port + 2}"
+            keyServer = "${credentialManager.wan}:${credentialManager.port + 1}"
+            websocketServer = "${credentialManager.wan}:${credentialManager.port}"
         }
     }
 

@@ -42,7 +42,6 @@ class ServerIPListener(private val context: Context) {
             val subject = "Server IP Change Notification"
             val message = "The server's external IP address has changed. New IP: $newInternetIP" //currently hardcoded
 
-            // Call a function to send email
             sendEmail(recipient, subject, message)
         }
 
@@ -54,6 +53,12 @@ class ServerIPListener(private val context: Context) {
             emailIntent.putExtra(Intent.EXTRA_EMAIL, toEmail)
             emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
             emailIntent.putExtra(Intent.EXTRA_TEXT, message)
+
+            try {
+                context.startActivity(Intent.createChooser(emailIntent, "Send email..."))
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
 
         companion object {

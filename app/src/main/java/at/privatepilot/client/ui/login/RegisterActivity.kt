@@ -47,7 +47,7 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun getLocalIpAddress(): String {
+    private fun getLocalIpAddress(): String {
         return try {
             val wifiManager =
                 applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager

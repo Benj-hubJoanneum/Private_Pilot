@@ -2,11 +2,11 @@ package at.privatepilot.client.ui.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import at.privatepilot.MainActivity
 import at.privatepilot.client.restapi.client.CredentialManager
 import at.privatepilot.client.restapi.client.HttpClient
-import at.privatepilot.client.restapi.client.NetworkController
 import at.privatepilot.client.restapi.client.NetworkRepository
 import at.privatepilot.databinding.LoginBinding
 import at.privatepilot.server.ServerActivity
@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class LoginActivity : AppCompatActivity(), NetworkController.IpCallback {
+class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: LoginBinding
     private var credentialManager = CredentialManager.getInstance()
@@ -25,7 +25,6 @@ class LoginActivity : AppCompatActivity(), NetworkController.IpCallback {
         binding = LoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        NetworkController.setIpCallback(this)
 
         binding.loginButton.setOnClickListener {
             val decryptedUsername = credentialManager.getStoredUsername(this@LoginActivity)
@@ -35,12 +34,9 @@ class LoginActivity : AppCompatActivity(), NetworkController.IpCallback {
 
             if (enteredUsername == decryptedUsername && enteredPassword == decryptedPassword) {
                 NetworkRepository.getServerIP(this@LoginActivity)
+
                 credentialManager.deviceauth = true
                 launchMainActivity()
-            }
-
-            GlobalScope.launch(Dispatchers.IO) {
-                NetworkController.getInternetIpAddress()
             }
         }
 
@@ -68,9 +64,5 @@ class LoginActivity : AppCompatActivity(), NetworkController.IpCallback {
     private fun launchServerActivity() {
         val intent = Intent(this, ServerActivity::class.java)
         startActivity(intent)
-    }
-
-    override fun onIpReceived(ip: String) {
-        //credentialManager.saveWANAddress(this@LoginActivity, ip)
     }
 }
