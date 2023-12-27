@@ -6,5 +6,4 @@ class Metadata(
     val type: String,
     override val size: Int,
     override val last_modified: Double
-) : IMetadata {
-}
+) : IMetadata

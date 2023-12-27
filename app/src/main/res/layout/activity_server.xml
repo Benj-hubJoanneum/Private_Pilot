@@ -33,21 +33,23 @@
             android:text="@{viewModel.internetAddress}"
             android:gravity="center"/>
 
-        <Button
-            android:id="@+id/registerUserButton"
+        <Switch
+            android:id="@+id/registerUserSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/internetAddressTextView"
             android:layout_marginTop="16dp"
-            android:onClick="onRegisterUserClick"
-            android:text="Register User"
+            android:layout_marginBottom="16dp"
+            android:text="Register new User"
+            android:scaleX="1.25"
+            android:scaleY="1.25"
             android:gravity="center"/>
 
         <Button
             android:id="@+id/stopServerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/registerUserButton"
+            android:layout_below="@+id/registerUserSwitch"
             android:layout_marginTop="8dp"
             android:onClick="onStopServerClick"
             android:text="Stop Server"

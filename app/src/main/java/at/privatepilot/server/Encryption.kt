@@ -1,14 +1,13 @@
 package at.privatepilot.server
 
+import okio.ByteString
+import java.security.KeyFactory
 import java.security.KeyPairGenerator
 import java.security.PrivateKey
 import java.security.PublicKey
+import java.security.spec.X509EncodedKeySpec
 import java.util.Base64
 import javax.crypto.Cipher
-
-import okio.ByteString
-import java.security.KeyFactory
-import java.security.spec.X509EncodedKeySpec
 
 class Encryption {
 

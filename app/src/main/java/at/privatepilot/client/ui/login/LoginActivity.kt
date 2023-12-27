@@ -4,12 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import at.privatepilot.MainActivity
-import at.privatepilot.databinding.LoginBinding
-
 import at.privatepilot.client.restapi.client.CredentialManager
+import at.privatepilot.client.restapi.client.HttpClient
+import at.privatepilot.client.restapi.client.NetworkController
+import at.privatepilot.client.restapi.client.NetworkRepository
+import at.privatepilot.databinding.LoginBinding
 import at.privatepilot.server.ServerActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity(), NetworkController.IpCallback {
 
     private lateinit var binding: LoginBinding
     private var credentialManager = CredentialManager.getInstance()
@@ -20,6 +25,8 @@ class LoginActivity : AppCompatActivity() {
         binding = LoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        NetworkController.setIpCallback(this)
+
         binding.loginButton.setOnClickListener {
             val decryptedUsername = credentialManager.getStoredUsername(this@LoginActivity)
             val decryptedPassword = credentialManager.getStoredPassword(this@LoginActivity)
@@ -27,9 +34,13 @@ class LoginActivity : AppCompatActivity() {
             val enteredPassword = binding.passwordEditText.text.toString()
 
             if (enteredUsername == decryptedUsername && enteredPassword == decryptedPassword) {
-                credentialManager.updateCredentials(this@LoginActivity)
+                NetworkRepository.getServerIP(this@LoginActivity)
                 credentialManager.deviceauth = true
                 launchMainActivity()
+            }
+
+            GlobalScope.launch(Dispatchers.IO) {
+                NetworkController.getInternetIpAddress()
             }
         }
 
@@ -37,8 +48,7 @@ class LoginActivity : AppCompatActivity() {
             launchRegisterActivity()
         }
 
-        binding.startServerTextView?.setOnClickListener {
-            // Start ServerActivity when "Start Server" is clicked
+        binding.startServerTextView.setOnClickListener {
             launchServerActivity()
         }
 
@@ -58,5 +68,9 @@ class LoginActivity : AppCompatActivity() {
     private fun launchServerActivity() {
         val intent = Intent(this, ServerActivity::class.java)
         startActivity(intent)
+    }
+
+    override fun onIpReceived(ip: String) {
+        //credentialManager.saveWANAddress(this@LoginActivity, ip)
     }
 }

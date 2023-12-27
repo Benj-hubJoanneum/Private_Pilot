@@ -7,9 +7,11 @@ import android.media.ThumbnailUtils
 import at.privatepilot.server.model.Metadata
 import at.privatepilot.server.model.MetadataResponse
 import com.google.gson.Gson
-import io.ktor.application.*
-import io.ktor.http.cio.websocket.*
-import io.ktor.routing.*
+import io.ktor.application.install
+import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import io.ktor.http.cio.websocket.Frame
+import io.ktor.http.cio.websocket.readText
+import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.websocket.webSocket
@@ -22,8 +24,8 @@ import java.util.Base64
 
 
 class Websocket(private val port: Int, private val encryption: Encryption, private val context: Context) {
-    private final val BASE_DIRECTORY = "server_"
-    private final val home = context.getExternalFilesDir(BASE_DIRECTORY)
+    private val BASE_DIRECTORY = "server_"
+    private val home = context.getExternalFilesDir(BASE_DIRECTORY)
     private var pointer = BASE_DIRECTORY
 
     private val controller = Controller(context)

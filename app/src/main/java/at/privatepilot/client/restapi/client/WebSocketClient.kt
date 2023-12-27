@@ -11,12 +11,9 @@ import java.util.Base64
 class WebSocketClient(private val callback: WebSocketCallback) {
 
     private val client = OkHttpClient()
-    private val wsUrl = "ws://10.0.0.99:3002/ws" // WebSocket URL
+    private val wsUrl = "ws://${NetworkRepository.websocketServer}/ws"
 
     private var webSocket: WebSocket? = null
-
-    private val credentialManager = CredentialManager.getInstance()
-
     private lateinit var crypt: CryptoUtils
 
     private fun getConnection(): WebSocket {
@@ -26,7 +23,6 @@ class WebSocketClient(private val callback: WebSocketCallback) {
                 webSocket = createWebSocket(
                     CredentialManager.name, CredentialManager.token
                 )
-                    //crypt.encrypt(credentialManager.name), crypt.encrypt(credentialManager.token))
             }
         }
         return webSocket as WebSocket

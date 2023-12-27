@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import at.privatepilot.R
 import at.privatepilot.client.model.directoryItem.viewmodel.DirectoryItemViewModel
 import at.privatepilot.client.restapi.service.NodeRepository
-import at.privatepilot.R
 import at.privatepilot.databinding.DirectoryNodeBinding
 
 class NavAdapter : RecyclerView.Adapter<NavAdapter.DirViewHolder>() {

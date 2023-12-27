@@ -23,7 +23,7 @@ class CryptoUtils {
 
     init {
         generateKeyPair()
-        serverPublicKey = fetchServerPublicKey("http://10.0.0.99:3001/public-key")
+        serverPublicKey = fetchServerPublicKey("http://${NetworkRepository.keyServer}/public-key")
     }
 
     fun encrypt(plaintext: String): String {

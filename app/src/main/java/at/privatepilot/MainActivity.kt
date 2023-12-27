@@ -13,9 +13,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.res.ResourcesCompat
@@ -31,8 +33,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import at.privatepilot.databinding.ActivityMainBinding
 import at.privatepilot.client.restapi.client.CredentialManager
+import at.privatepilot.client.restapi.client.NetworkRepository
 import at.privatepilot.client.restapi.service.NodeRepository
-import at.privatepilot.client.ui.listView.base.BaseFragment
 import at.privatepilot.client.ui.login.LoginActivity
 import at.privatepilot.client.ui.navView.NavAdapter
 import at.privatepilot.client.ui.navView.NavViewModel
@@ -43,6 +45,7 @@ import com.leinardi.android.speeddial.SpeedDialView
 
 class MainActivity : AppCompatActivity(), NodeRepository.ConnectionCallback, NodeRepository.LoadingCallback  {
 
+    private val viewModel: MainViewModel by viewModels()
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private var actionMode: ActionMode? = null
@@ -143,10 +146,21 @@ class MainActivity : AppCompatActivity(), NodeRepository.ConnectionCallback, Nod
             return
         }
 
+        viewModel.lan.observe(this) { lan ->
+            findViewById<TextView>(R.id.lan).text = "Server LAN IP: ${lan}"
+        }
+
+        viewModel.wan.observe(this) { wan ->
+            findViewById<TextView>(R.id.wan).text = "Server WAN IP: ${wan}"
+        }
+
+        viewModel.updateCredentials(CredentialManager.getStoredServerLANAddress(this), CredentialManager.getStoredServerWANAddress(this))
+
         nodeRepository.readNode("")
 
         handleIntent(intent)
         handleSendIntent(intent)
+
     }
 
     private fun redirectToLogin() {
@@ -235,6 +249,16 @@ class MainActivity : AppCompatActivity(), NodeRepository.ConnectionCallback, Nod
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_settings -> {
+                showSettingsDialog()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun onSearchQuery(query: String) {
         nodeRepository.onSearchQuery(query)
     }
@@ -251,6 +275,26 @@ class MainActivity : AppCompatActivity(), NodeRepository.ConnectionCallback, Nod
                 nodeRepository.createNode(folderName)
             }
             .setNegativeButton("Cancel") { dialog, which ->
+            }
+            .show()
+    }
+
+    private fun showSettingsDialog() {
+        val builder = MaterialAlertDialogBuilder(this)
+        val inflater = LayoutInflater.from(this)
+        val view = inflater.inflate(R.layout.dialog_ip_settings, null)
+
+        val ip = view.findViewById<EditText>(R.id.ip_field)
+
+        builder.setView(view)
+            .setPositiveButton("OK") { dialog, which ->
+                val newIP = "${ip.text}"
+                NetworkRepository.setWANIP(ip.text.toString(), this)
+                showToast("new IP: $newIP")
+                viewModel.updateCredentials(CredentialManager.getStoredServerLANAddress(this), newIP)
+            }
+            .setNegativeButton("Cancel") { dialog, which ->
+                // Handle cancel action if needed
             }
             .show()
     }

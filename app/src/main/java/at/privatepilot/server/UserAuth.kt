@@ -1,6 +1,9 @@
 package at.privatepilot.server
 
 import android.content.Context
+import at.privatepilot.server.model.users.Token
+import at.privatepilot.server.model.users.User
+import at.privatepilot.server.model.users.Users
 import com.google.gson.Gson
 import java.io.File
 import java.security.MessageDigest
@@ -11,12 +14,12 @@ class UserAuth(val context: Context) {
 
     private val gson = Gson()
 
-    fun registerUser(name: String, token: String): Boolean {
+    fun registerUser(name: String, ip: String, token: String): Boolean {
         try {
             val salt = generateSalt()
             val hashedToken = hashPassword(token, salt)
 
-            val user = User(name, Token(hashedToken, salt))
+            val user = User(name, ip, Token(hashedToken, salt))
 
             val usersData = getUsersData()
             if (usersData.users.any { it.name == name }) {

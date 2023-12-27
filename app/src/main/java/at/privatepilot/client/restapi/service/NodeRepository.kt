@@ -21,7 +21,7 @@ import retrofit2.http.Url
 import java.io.File
 import java.io.FileOutputStream
 
-class NodeRepository() : ControllerSocket.ControllerCallback {
+class NodeRepository : ControllerSocket.ControllerCallback {
 
     companion object {
         @Volatile
