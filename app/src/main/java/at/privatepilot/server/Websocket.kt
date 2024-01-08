@@ -36,6 +36,7 @@ class Websocket(private val port: Int, private val encryption: Encryption, priva
             install(io.ktor.websocket.WebSockets)
             routing {
                 webSocket("/ws") {
+                    controller.fileExist(BASE_DIRECTORY)
                     val username = call.request.headers["username"]
                     val authorization = call.request.headers["authorization"]
                     val publickey = call.request.headers["publickey"]
