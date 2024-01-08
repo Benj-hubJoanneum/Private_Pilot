@@ -1,11 +1,11 @@
 # App Setup Guide
 
-## Server Phone
+## Setup of Server Phone
 1. Start the app on the server-phone
 2. Press "Start Server" (bottom display border)
 3. Toggle "Register new User"
 
-## Client Phone
+## Setup of Client Phone
 4. Start the app on the client-phone
 5. Press "Register"
 6. Choose a Username and a Password
