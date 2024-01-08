@@ -21,5 +21,5 @@
 - The Server has a physical copy of all shown files.
 - The client stores only files which were downloaded.
 - Use a file explorer (either Windows or directly on Phone)
-- Open "Internal Storage" \Android\data\at.privatepilot\files\server_
+- Open "Internal Storage" \Android\data\at.privatepilot\files\server_ \
 ATTENTION: Some Android Operating Systems hide their App files.
