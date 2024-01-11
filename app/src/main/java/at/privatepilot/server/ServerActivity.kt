@@ -1,8 +1,6 @@
 package at.privatepilot.server
 
-import android.content.Context
 import android.content.Intent
-import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
@@ -12,12 +10,6 @@ import at.privatepilot.databinding.ActivityServerBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import java.net.InetAddress
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
 
 class ServerActivity : AppCompatActivity() {
 
@@ -28,7 +20,7 @@ class ServerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        ServerIPListener(this)
+        IPListenerService(this)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
@@ -68,7 +60,6 @@ class ServerActivity : AppCompatActivity() {
                 httpServer?.stopRegisterUserServer()
             }
         }
-        ServerIPListener(this)
     }
 
     private fun stopServer() {
