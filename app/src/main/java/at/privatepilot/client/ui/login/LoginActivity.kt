@@ -33,10 +33,12 @@ class LoginActivity : AppCompatActivity() {
             val enteredPassword = binding.passwordEditText.text.toString()
 
             if (enteredUsername == decryptedUsername && enteredPassword == decryptedPassword) {
-                NetworkRepository.getServerIP(this@LoginActivity)
+                GlobalScope.launch(Dispatchers.IO) {
+                    NetworkRepository.getServerIP(this@LoginActivity)
 
-                credentialManager.deviceauth = true
-                launchMainActivity()
+                    credentialManager.deviceauth = true
+                    launchMainActivity()
+                }
             }
         }
 

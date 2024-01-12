@@ -4,19 +4,28 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.util.concurrent.TimeUnit
 
 class HttpClient() {
 
     private val client: OkHttpClient = OkHttpClient()
 
     fun get(url: String): String {
-        val request = Request.Builder()
-            .url(url)
-            .build()
+        try {
+            val request = Request.Builder()
+                .url(url)
+                .build()
 
-        val response = client.newCall(request).execute()
+            val clientWithTimeout = client.newBuilder()
+                .callTimeout(1, TimeUnit.SECONDS)
+                .build()
 
-        return response.body?.string() ?: ""
+            val response = clientWithTimeout.newCall(request).execute()
+
+            return response.body?.string() ?: ""
+        } catch (e: Exception) {
+            return ""
+        }
     }
 
     fun post(url: String, header_name: String, header_IP: String, requestBody: String): String {

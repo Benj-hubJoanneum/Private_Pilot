@@ -35,9 +35,9 @@ class RegisterActivity : AppCompatActivity() {
 
             credentialManager.saveUserCredentials(this@RegisterActivity, username, password, serverAddress, port, NetworkRepository.getHomeNetworkSSID(this))
             credentialManager.updateCredentials(this@RegisterActivity)
-            NetworkRepository.getServerIP(this)
 
             GlobalScope.launch(Dispatchers.IO) {
+                NetworkRepository.getServerIP(this@RegisterActivity)
                 httpClient.post("http://${NetworkRepository.registerServer}/register-user", username, getLocalIpAddress(), credentialManager.token)
             }
 
