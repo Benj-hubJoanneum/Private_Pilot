@@ -25,21 +25,14 @@ class LoginActivity : AppCompatActivity() {
         binding = LoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.loginButtonLAN.setOnClickListener {
+            NetworkRepository.useLAN(this@LoginActivity)
+            login()
+        }
 
-        binding.loginButton.setOnClickListener {
-            val decryptedUsername = credentialManager.getStoredUsername(this@LoginActivity)
-            val decryptedPassword = credentialManager.getStoredPassword(this@LoginActivity)
-            val enteredUsername = binding.usernameEditText.text.toString()
-            val enteredPassword = binding.passwordEditText.text.toString()
-
-            if (enteredUsername == decryptedUsername && enteredPassword == decryptedPassword) {
-                GlobalScope.launch(Dispatchers.IO) {
-                    NetworkRepository.getServerIP(this@LoginActivity)
-
-                    credentialManager.deviceauth = true
-                    launchMainActivity()
-                }
-            }
+        binding.loginButtonWAN.setOnClickListener {
+            NetworkRepository.useWAN(this@LoginActivity)
+            login()
         }
 
         binding.registerTextView.setOnClickListener {
@@ -50,6 +43,20 @@ class LoginActivity : AppCompatActivity() {
             launchServerActivity()
         }
 
+    }
+
+    private fun login(){
+        val decryptedUsername = credentialManager.getStoredUsername(this@LoginActivity)
+        val decryptedPassword = credentialManager.getStoredPassword(this@LoginActivity)
+        val enteredUsername = binding.usernameEditText.text.toString()
+        val enteredPassword = binding.passwordEditText.text.toString()
+
+        if (enteredUsername == decryptedUsername && enteredPassword == decryptedPassword) {
+            GlobalScope.launch(Dispatchers.IO) {
+                credentialManager.deviceauth = true
+                launchMainActivity()
+            }
+        }
     }
 
     private fun launchMainActivity() {

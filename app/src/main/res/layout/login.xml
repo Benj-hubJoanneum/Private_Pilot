@@ -29,13 +29,32 @@
         android:inputType="textPassword"
         android:gravity="center" />
 
-    <Button
-        android:id="@+id/loginButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Login"
-        android:onClick="onLoginClick" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/loginButtonWAN"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            android:text="Login via Internet"/>
+
+        <Button
+            android:id="@+id/loginButtonLAN"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            android:text="Login via Local Network" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/registerTextView"
@@ -44,8 +63,7 @@
         android:layout_marginTop="8dp"
         android:textColor="?attr/colorAccent"
         android:text="Register"
-        android:autoLink="web"
-        android:onClick="onRegisterClick"/>
+        android:autoLink="web"/>
 
     <Space
         android:layout_width="match_parent"
@@ -59,6 +77,5 @@
         android:layout_marginTop="8dp"
         android:textColor="?attr/colorAccent"
         android:text="Start Server"
-        android:autoLink="web"
-        android:onClick="onStartServerClick"/>
+        android:autoLink="web"/>
 </LinearLayout>

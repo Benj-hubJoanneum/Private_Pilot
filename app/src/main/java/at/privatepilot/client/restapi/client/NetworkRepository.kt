@@ -23,34 +23,39 @@ object NetworkRepository {
     val credentialManager = CredentialManager.getInstance()
 
     val httpClient = HttpClient()
-    fun getServerIP(context: Context) {
-            try {
-                credentialManager.updateCredentials(context)
+
+    fun useWAN(context: Context) {
+        try {
+            credentialManager.updateCredentials(context)
             val wan = credentialManager.getStoredServerWANAddress(context)
 
-                registerServer = "${wan}:${credentialManager.port + 2}"
-                keyServer = "${wan}:${credentialManager.port + 1}"
-                websocketServer = "${wan}:${credentialManager.port}"
+            registerServer = "${wan}:${credentialManager.port + 2}"
+            keyServer = "${wan}:${credentialManager.port + 1}"
+            websocketServer = "${wan}:${credentialManager.port}"
 
-                try {
-                    val bool1 = credentialManager.getHomeNetworkSSID(context) == getHomeNetworkSSID(context)
+        } catch (e: Exception) {
+            Log.d("Error", "Error with the IP address")
+        }
+    }
+
+    fun useLAN(context: Context) {
+        try {
+            credentialManager.updateCredentials(context)
+            try {
+                if (credentialManager.getHomeNetworkSSID(context) == getHomeNetworkSSID(context)) {
                     val response = httpClient.get("http://${credentialManager.lan}:${credentialManager.port + 1}/ip")
-                    if (bool1 && response != "") {
-                        registerServer = "${credentialManager.lan}:${credentialManager.port + 2}"
-                        keyServer = "${credentialManager.lan}:${credentialManager.port + 1}"
-                        websocketServer = "${credentialManager.lan}:${credentialManager.port}"
+                    registerServer = "${credentialManager.lan}:${credentialManager.port + 2}"
+                    keyServer = "${credentialManager.lan}:${credentialManager.port + 1}"
+                    websocketServer = "${credentialManager.lan}:${credentialManager.port}"
 
-                        credentialManager.saveWANAddress(context, response)
-                    } else {
-                        Log.d("Error", "choosing WAN IP")
-                    }
-
-                } catch (e: Exception) {
-                    Log.d("Error", "Error with the WAN IP")
+                    credentialManager.saveWANAddress(context, response)
                 }
             } catch (e: Exception) {
-                Log.d("Error", "Error with the IP address")
+                Log.d("Error", "Error with the WAN IP")
             }
+        } catch (e: Exception) {
+            Log.d("Error", "Error with the IP address")
+        }
     }
 
     fun getHomeNetworkSSID(context: Context): String {
