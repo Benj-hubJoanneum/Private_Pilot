@@ -37,11 +37,18 @@ class RegisterActivity : AppCompatActivity() {
             credentialManager.updateCredentials(this@RegisterActivity)
 
             GlobalScope.launch(Dispatchers.IO) {
-                httpClient.post("http://${NetworkRepository.registerServer}/register-user", username, getLocalIpAddress(), credentialManager.token)
+                httpClient.post("http://${NetworkRepository.registerServer}/register-user", username, getLocalIpAddress(), credentialManager.token, object : HttpClient.HttpCallback {
+                    override fun onResponse(response: String) {
+                        // Handle successful response
+                        println("Response: $response")
+                    }
+
+                    override fun onFailure(error: Exception) {
+                        // Handle failure
+                        println("Error: ${error.message}")
+                    }
+                })
             }
-
-
-
             finish()
         }
     }

@@ -43,12 +43,22 @@ object NetworkRepository {
             credentialManager.updateCredentials(context)
             try {
                 if (credentialManager.getHomeNetworkSSID(context) == getHomeNetworkSSID(context)) {
-                    val response = httpClient.get("http://${credentialManager.lan}:${credentialManager.port + 1}/ip")
+
+                    httpClient.get("http://${credentialManager.lan}:${credentialManager.port + 1}/ip", object : HttpClient.HttpCallback {
+                        override fun onResponse(response: String) {
+                            println("WAN adress: $response")
+                            credentialManager.saveWANAddress(context, response)
+                        }
+                        override fun onFailure(error: Exception) {
+                            println("Error: IP server not reachable")
+                        }
+                    })
+
                     registerServer = "${credentialManager.lan}:${credentialManager.port + 2}"
                     keyServer = "${credentialManager.lan}:${credentialManager.port + 1}"
                     websocketServer = "${credentialManager.lan}:${credentialManager.port}"
 
-                    credentialManager.saveWANAddress(context, response)
+
                 }
             } catch (e: Exception) {
                 Log.d("Error", "Error with the WAN IP")
